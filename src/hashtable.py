@@ -1,11 +1,13 @@
 # '''
 # Linked List hash table key/value pair
 # '''
+
 class LinkedPair:
     def __init__(self, key, value):
         self.key = key
         self.value = value
         self.next = None
+
 
 class HashTable:
     '''
@@ -78,8 +80,6 @@ class HashTable:
             pair.next = LinkedPair(key, value)
 
 
-
-
     def remove(self, key):
         '''
         Remove the value stored with the given key.
@@ -90,11 +90,25 @@ class HashTable:
         '''
         key_hash_index = self._hash_mod(key)
 
-        if self.storage[key_hash_index] is None:
-            print("The key is not found")
-        else:
-            self.storage[key_hash_index] = None 
-            # not accounting for collision
+        pair = self.storage[key_hash_index]
+        
+
+        if pair.key == key:
+            if pair.next:
+                pass
+            else:
+                pair = None                  
+            
+        #check linked list
+        while pair.next:
+            if pair.next.key == key:
+                #change pointer to next node in LL
+                pair.next = pair.next.next
+            else:
+                pair = pair.next
+        
+        print("Key not found")
+
 
 
     def retrieve(self, key):
