@@ -56,21 +56,27 @@ class HashTable:
         '''
         key_hash_index = self._hash_mod(key)
 
-
         if self.storage[key_hash_index] is None:
             self.storage[key_hash_index] = LinkedPair(key, value)    
-            #return True
-
+    
         else:
-            print("Collision")
+            pair = self.storage[key_hash_index]
+            #if key is the same then update the value 
+            if pair.key == key:
+                pair.value = value
+                return
+            
+            #while there is a next
+            while pair.next is not None:
+                if pair.next.key == key:
+                    pair.next.value = value
+                    return 
+                else:
+                    #repoint the pointer 
+                    pair = pair.next
+            #do something here outside of while loop..... if there isn't a match with the key then insert new pair as a next 
+            pair.next = LinkedPair(key, value)
 
-
-            # for i in self.storage[key_hash_index]:
-            #     if i[0] == key:
-            #         i[1] = value
-            #         # return True
-            # self.storage[key_hash_index].append(key_value)
-            #return True
 
 
 
@@ -101,13 +107,20 @@ class HashTable:
         '''
         key_hash_index = self._hash_mod(key)
 
-        if self.storage[key_hash_index] is None:
+        pair = self.storage[key_hash_index]
+
+        if pair is None:
             return None
         else:
-            for i in self.storage[key_hash_index]:
-                if i[0] == key:
-                    return i[1]
-
+            while pair:
+                if pair.key == key:
+                    return pair.value
+                else:
+                    ##if there isn't a match, go to the next one 
+                    pair = pair.next
+            #if there is never a match, return None    
+            return None
+      
 
     def resize(self):
         '''
