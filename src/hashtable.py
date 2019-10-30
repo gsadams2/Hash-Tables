@@ -94,16 +94,15 @@ class HashTable:
         
 
         if pair.key == key:
-            if pair.next:
-                pass
-            else:
-                pair = None                  
+            self.storage[key_hash_index] = None
             
         #check linked list
         while pair.next:
             if pair.next.key == key:
                 #change pointer to next node in LL
                 pair.next = pair.next.next
+                return
+            #change pointer
             else:
                 pair = pair.next
         
@@ -143,7 +142,24 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+        self.capacity *= 2
+        new_storage = [None] * self.capacity
+
+        #make copy of old storage
+        old_storage = self.storage  
+
+        self.storage = new_storage
+        
+
+        #copy old items to new storage
+        for pair in old_storage:
+            while pair:
+                self.insert(pair.key, pair.value)
+                pair = pair.next
+            
+   
+        
+        
 
 
 
