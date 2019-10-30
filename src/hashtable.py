@@ -1,11 +1,13 @@
 # '''
 # Linked List hash table key/value pair
 # '''
+
 class LinkedPair:
     def __init__(self, key, value):
         self.key = key
         self.value = value
         self.next = None
+
 
 class HashTable:
     '''
@@ -15,6 +17,8 @@ class HashTable:
     def __init__(self, capacity):
         self.capacity = capacity  # Number of buckets in the hash table
         self.storage = [None] * capacity
+
+        
 
 
     def _hash(self, key):
@@ -43,6 +47,7 @@ class HashTable:
         return self._hash(key) % self.capacity
 
 
+
     def insert(self, key, value):
         '''
         Store the value with the given key.
@@ -51,8 +56,28 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+        key_hash_index = self._hash_mod(key)
 
+        if self.storage[key_hash_index] is None:
+            self.storage[key_hash_index] = LinkedPair(key, value)    
+    
+        else:
+            pair = self.storage[key_hash_index]
+            #if key is the same then update the value 
+            if pair.key == key:
+                pair.value = value
+                return
+            
+            #while there is a next
+            while pair.next is not None:
+                if pair.next.key == key:
+                    pair.next.value = value
+                    return 
+                else:
+                    #repoint the pointer 
+                    pair = pair.next
+            #do something here outside of while loop..... if there isn't a match with the key then insert new pair as a next 
+            pair.next = LinkedPair(key, value)
 
 
     def remove(self, key):
@@ -63,7 +88,26 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+        key_hash_index = self._hash_mod(key)
+
+        pair = self.storage[key_hash_index]
+        
+
+        if pair.key == key:
+            self.storage[key_hash_index] = None
+            
+        #check linked list
+        while pair.next:
+            if pair.next.key == key:
+                #change pointer to next node in LL
+                pair.next = pair.next.next
+                return
+            #change pointer
+            else:
+                pair = pair.next
+        
+        print("Key not found")
+
 
 
     def retrieve(self, key):
@@ -74,8 +118,22 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+        key_hash_index = self._hash_mod(key)
 
+        pair = self.storage[key_hash_index]
+
+        if pair is None:
+            return None
+        else:
+            while pair:
+                if pair.key == key:
+                    return pair.value
+                else:
+                    ##if there isn't a match, go to the next one 
+                    pair = pair.next
+            #if there is never a match, return None    
+            return None
+      
 
     def resize(self):
         '''
@@ -84,7 +142,24 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+        self.capacity *= 2
+        new_storage = [None] * self.capacity
+
+        #make copy of old storage
+        old_storage = self.storage  
+
+        self.storage = new_storage
+        
+
+        #copy old items to new storage
+        for pair in old_storage:
+            while pair:
+                self.insert(pair.key, pair.value)
+                pair = pair.next
+            
+   
+        
+        
 
 
 
